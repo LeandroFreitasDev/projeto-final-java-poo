@@ -22,7 +22,7 @@ public class CalcularFolha implements TabelaTaxas {
 			
 		//Se o salário for acima de R$ 8.157,41 não será aplicado calculo, o desconto INSS será fixo R$ 951,62
 		}else {
-			return INSS_DEDUCAO_TETO;
+			return INSS_CONTRIBUICAO_TETO;
 		}
 		
 	}
