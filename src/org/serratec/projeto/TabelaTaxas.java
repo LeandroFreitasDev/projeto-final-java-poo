@@ -18,7 +18,7 @@ public interface TabelaTaxas {
     Double INSS_ALIQUOTA_14 = 0.14;
     Double INSS_DEDUCAO_14 = 190.42;
     
-    Double INSS_DEDUCAO_TETO = 951.62;
+    Double INSS_CONTRIBUICAO_TETO = 951.62;
     
     // Tabela IR
     Double IR_VALOR_DEPENDENTE = 186.59;

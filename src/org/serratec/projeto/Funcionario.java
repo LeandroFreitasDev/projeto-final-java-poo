@@ -8,30 +8,27 @@ import org.serratec.excecoes.DependenteException;
 public class Funcionario extends Pessoa{
 	
 		                                                                // FIZ ALGUMAS MODIFICACOES NO CODIGO, COMO COMENTARIOS
-																		// 5 - CRIAR CLASSE FILHA, HERDA DO PAI E INSTANCIA DEPENDENTES
-		private Double salarioBruto;									// BD - fazer alteracoes TABELA > (cod_funcionario, nome_funcionario, cpf_funcionario, data_nascimento, salario_bruto)
+																		                                // 5 - CRIAR CLASSE FILHA, HERDA DO PAI E INSTANCIA DEPENDENTES
+		private Double salarioBruto;									                  // BD - fazer alteracoes TABELA > (cod_funcionario, nome_funcionario, cpf_funcionario, data_nascimento, salario_bruto)
 		private Double descontoInss;
 		private Double descontoIR;
 		
 		private List<Dependente> dependentes = new ArrayList<>();
 
 		
+
 		// CONSTRUTOR PADRAO
 		public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto, Double descontoInss,
 			Double descontoIR, List<Dependente> dependentes) {
+
 			super(nome, cpf, dataNascimento);
 			this.salarioBruto = salarioBruto;
-			this.descontoInss = descontoInss;
-			this.descontoIR = descontoIR;
+			this.descontoInss = 0.;
+			this.descontoIR = 0.;
 			this.dependentes = dependentes;
 		}
-		
-//		public Funcionario(String string, String string2, String string3, int i, Object object, Object object2,
-//				Object object3) {
-			
-		
-
-		// GETTERS E SETTERS
+	
+		// Get e Set
 		public Double getSalarioBruto() {
 			return salarioBruto;
 		}
