@@ -19,17 +19,15 @@ public class Funcionario extends Pessoa{
 
 		// Construtor
 		
-		public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto, Double descontoInss,
-				Double descontoIR, List<Dependente> dependentes) {
+		public Funcionario(String nome, String cpf, Double salarioBruto, LocalDate dataNascimento, List<Dependente> dependentes) {
 			super(nome, cpf, dataNascimento);
 			this.salarioBruto = salarioBruto;
-			this.descontoInss = descontoInss;
-			this.descontoIR = descontoIR;
+			this.descontoInss = 0.;
+			this.descontoIR = 0.;
 			this.dependentes = dependentes;
 		}
 		
 		// Get e Set
-
 		public Double getSalarioBruto() {
 			return salarioBruto;
 		}
