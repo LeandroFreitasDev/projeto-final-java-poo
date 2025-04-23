@@ -5,77 +5,77 @@ import java.time.LocalDate;
 public class FolhaPagamento {
 	// 6- 
 	
-		private Integer codigo;
-		private LocalDate dataPagamento;
-		private Double descontoINSS;
-		private Double descontoIR;
-		private Double salarioLiquido;
+		private Integer codigo_pagamento;
+		private LocalDate data_pagamento;
+		private Double desconto_inss;
+		private Double desconto_ir;
+		private Double salario_liquido;
 		private Funcionario funcionario;
 		
-		private static Integer contador = 0;
+//		private static Integer contador = 0;
 		
 		
 		// Construtor
 		public FolhaPagamento(Funcionario funcionario) {
-			this.codigo = contador++;
+//			this.codigo = contador++;
 			this.funcionario = funcionario;
 			this.dataPagamento = LocalDate.now();
 		// Metodos calcular folha
 			this.descontoINSS = CalcularFolha.CalcularINSS(funcionario.getSalarioBruto());
 			this.descontoIR = CalcularFolha.CalcularIR(funcionario.getSalarioBruto(), this.descontoINSS, funcionario.getDependentes().size());
 			this.salarioLiquido = CalcularFolha.calcularSalarioLiquido(funcionario.getSalarioBruto(), this.descontoINSS, this.descontoIR);
-
+      
 		}
 
 
 		// Get e Set
 		public Integer getCodigo() {
-			return codigo;
+			return codigo_pagamento;
 		}
 
 
 		public void setCodigo(Integer codigo) {
-			this.codigo = codigo;
+			this.codigo_pagamento = codigo;
 		}
 
 
 		public LocalDate getDataPagamento() {
-			return dataPagamento;
+			return data_pagamento;
 		}
 
 
 		public void setDataPagamento(LocalDate dataPagamento) {
-			this.dataPagamento = dataPagamento;
+			this.data_pagamento = dataPagamento;
 		}
 
 
 		public Double getDescontoINSS() {
-			return descontoINSS;
+			return desconto_inss;
 		}
 
 
 		public void setDescontoINSS(Double descontoINSS) {
-			this.descontoINSS = descontoINSS;
+			this.desconto_inss = descontoINSS;
 		}
 
 
 		public Double getDescontoIR() {
-			return descontoIR;
+			return desconto_ir;
 		}
 
 
 		public void setDescontoIR(Double descontoIR) {
-			this.descontoIR = descontoIR;
+			this.desconto_ir = descontoIR;
 		}
 
 
 		public Double getSalarioLiquido() {
-			return salarioLiquido;
+			return salario_liquido;
 		}
 
 
 		public void setSalarioLiquido(Double salarioLiquido) {
-			this.salarioLiquido = salarioLiquido;
+			this.salario_liquido = salarioLiquido;
 		}
 
 
@@ -88,16 +88,22 @@ public class FolhaPagamento {
 			this.funcionario = funcionario;
 		}
 
+//
+//		public static Integer getContador() {
+//			return contador;
+//		}
 
-		public static Integer getContador() {
-			return contador;
-		}
-
-
-		public static void setContador(Integer contador) {
-			FolhaPagamento.contador = contador;
-		}
+//
+//		public static void setContador(Integer contador) {
+//			FolhaPagamento.contador = contador;
+		
 		
 		// calcular descontos e salarios liquidos aqui
 
 }
+
+// BANCO DE DADOS - POSTGREE, 
+// Table folha_de_pagamento 
+// > columns - codigo_pagamento, data_pagamento,
+// desconto_inss, desconto_ir, 
+// salario_liquido, cod_funcionario (fk)
