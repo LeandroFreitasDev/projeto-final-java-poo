@@ -9,7 +9,7 @@ public class Dependente extends Pessoa{
 		
 		
 		// Construtor
-		public Dependente(String nome, String cpf, LocalDate dataNascimento, Parentesco parentesco) {
+		public Dependente(String nome, String cpf, LocalDate dataNascimento, Parentesco parentesco) { 
 			super(nome, cpf, dataNascimento);
 			this.parentesco = parentesco;
 		}
@@ -24,4 +24,9 @@ public class Dependente extends Pessoa{
 			this.parentesco = parentesco;
 		}
 
-}
+	}
+
+// BANCO DE DADOS - POSTGREE, Table Dependente 
+// > columns - codigo_dependente, nome_dependente, 
+// cpf_dependente, data_nascimento, 
+// parentesco, cod_funcionario
