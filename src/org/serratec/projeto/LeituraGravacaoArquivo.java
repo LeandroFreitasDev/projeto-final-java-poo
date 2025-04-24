@@ -16,7 +16,6 @@ import java.util.Scanner;
 import java.util.Set;
 
 public class LeituraGravacaoArquivo {
-
     private List<Funcionario> funcionarios = new ArrayList<>();
     private List<Funcionario> funcionariosComCpfDuplicado = new ArrayList<>();
     private Set<String> cpfsUnicos = new HashSet<>();
