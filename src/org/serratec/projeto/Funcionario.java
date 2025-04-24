@@ -15,11 +15,8 @@ public class Funcionario extends Pessoa{
 		
 		private List<Dependente> dependentes = new ArrayList<>();
 
-		
-
 		// CONSTRUTOR PADRAO
-		public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto, Double descontoInss,
-			Double descontoIR, List<Dependente> dependentes) {
+		public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto, Double descontoInss, Double descontoIR, List<Dependente> dependentes) {
 
 			super(nome, cpf, dataNascimento);
 			this.salarioBruto = salarioBruto;
