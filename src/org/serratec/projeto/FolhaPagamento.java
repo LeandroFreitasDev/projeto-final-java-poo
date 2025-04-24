@@ -19,11 +19,11 @@ public class FolhaPagamento {
 		public FolhaPagamento(Funcionario funcionario) {
 //			this.codigo = contador++;
 			this.funcionario = funcionario;
-			this.dataPagamento = LocalDate.now();
+			this.data_pagamento = LocalDate.now();
 		// Metodos calcular folha
-			this.descontoINSS = CalcularFolha.CalcularINSS(funcionario.getSalarioBruto());
-			this.descontoIR = CalcularFolha.CalcularIR(funcionario.getSalarioBruto(), this.descontoINSS, funcionario.getDependentes().size());
-			this.salarioLiquido = CalcularFolha.calcularSalarioLiquido(funcionario.getSalarioBruto(), this.descontoINSS, this.descontoIR);
+			this.desconto_inss = CalcularFolha.CalcularINSS(funcionario.getSalarioBruto());
+			this.desconto_ir = CalcularFolha.CalcularIR(funcionario.getSalarioBruto(), this.desconto_inss, funcionario.getDependentes().size());
+			this.salario_liquido = CalcularFolha.calcularSalarioLiquido(funcionario.getSalarioBruto(), this.desconto_inss, this.desconto_ir);
       
 		}
 

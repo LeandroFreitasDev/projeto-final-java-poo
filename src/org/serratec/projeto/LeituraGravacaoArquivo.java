@@ -56,7 +56,15 @@ public class LeituraGravacaoArquivo {
 				String cpf = dados[1];
 				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
 				Double salarioBruto = Double.parseDouble(dados[3]);
-				funcionarioAtual = new Funcionario(nome, cpf, salarioBruto, dataNascimento, new ArrayList<>());
+				Double descontoInss = CalcularFolha.CalcularINSS(salarioBruto);
+				Double descontoIR = CalcularFolha.CalcularIR(salarioBruto, descontoInss, 
+						funcionarioAtual.getDependentes().size());
+				funcionarioAtual = new Funcionario(nome, cpf, dataNascimento,  
+						salarioBruto, descontoInss, 
+						descontoIR, new ArrayList<>());
+				
+			
+				
 				
 			} else {
 				String nome = dados[0];
