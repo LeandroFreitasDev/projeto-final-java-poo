@@ -23,6 +23,16 @@ public class Funcionario extends Pessoa{
 			this.descontoInss = 0.;
 			this.descontoIR = 0.;
 			this.dependentes = dependentes;
+			
+			
+			
+		}
+		public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto,List<Dependente> dependentes) {
+
+			super(nome, cpf, dataNascimento);
+			this.salarioBruto = salarioBruto;
+			this.dependentes = dependentes;
+			
 		}
 	
 		// Get e Set

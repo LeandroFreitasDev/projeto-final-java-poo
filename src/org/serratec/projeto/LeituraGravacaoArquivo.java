@@ -23,21 +23,11 @@ public class LeituraGravacaoArquivo {
     private DecimalFormatSymbols symbols = new DecimalFormatSymbols(new Locale("pt", "BR"));
     private DecimalFormat formatarReais = new DecimalFormat("#0.00", symbols);
 
-//    public LeituraGravacaoArquivo() {
-//    	LeituraGravacaoArquivo a = new LeituraGravacaoArquivo();
-//    	List<String[]> dadosPorLinha = a.lerArquivo();
-//    	if (!dadosPorLinha.isEmpty()) {
-//    		a.processarArquivo(dadosPorLinha);
-//    		a.gerarCPFDuplicados();
-//    		a.gerarFolha();
-//    	}
-//    }
-
     public List<String[]> lerArquivo() {
         List<String[]> dadosPorLinha = new ArrayList<>();
 
         try (Scanner sc = new Scanner(System.in)) {
-            System.out.println("Digite o nome do arquivo:");
+            System.out.println("Digite o caminho do arquivo .csv:");
             String nomeArquivo = sc.next();
             FileReader file = new FileReader(nomeArquivo);
             Scanner sc1 = new Scanner(file);
@@ -79,9 +69,7 @@ public class LeituraGravacaoArquivo {
                 String cpf = dados[1];
                 LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
                 Double salarioBruto = Double.parseDouble(dados[3]);
-                Double descontoInss = CalcularFolha.CalcularINSS(salarioBruto);
-				Double descontoIR = CalcularFolha.CalcularIR(salarioBruto, descontoInss, funcionarioAtual.getDependentes().size());
-                funcionarioAtual = new Funcionario(nome, cpf, dataNascimento,salarioBruto, descontoInss, descontoIR, new ArrayList<>());
+                funcionarioAtual = new Funcionario(nome, cpf, dataNascimento, salarioBruto, new ArrayList<>());
             } else {
                 String nome = dados[0];
                 String cpf = dados[1];
@@ -97,6 +85,14 @@ public class LeituraGravacaoArquivo {
     }
 
     private void processarFuncionario(Funcionario funcionario, List<Dependente> dependentes) {
+    	funcionario.setDependentes(new ArrayList<>(dependentes));
+
+        Double salario = funcionario.getSalarioBruto();
+        Double descontoInss = CalcularFolha.CalcularINSS(salario);
+        Double descontoIr = CalcularFolha.CalcularIR(salario, descontoInss, dependentes.size());
+
+        funcionario.setDescontoInss(descontoInss);
+        funcionario.setDescontoIR(descontoIr);
         boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
 
         for (Dependente d : dependentes) {
@@ -122,7 +118,7 @@ public class LeituraGravacaoArquivo {
     public void gerarCPFDuplicados() {
         if (!funcionariosComCpfDuplicado.isEmpty()) {
             try{
-            	 FileWriter fw = new FileWriter("./CPFDuplicados.csv");
+            	 FileWriter fw = new FileWriter("/CPFDuplicados.csv");
                  PrintWriter pw = new PrintWriter(fw);
                  for (Funcionario f : funcionariosComCpfDuplicado) {
                 	 String linha = "FUNCIONÁRIO: " + f.getNome() + ";" + f.getCpf() + ";" +
