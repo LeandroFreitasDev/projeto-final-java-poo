@@ -34,7 +34,7 @@ public class DependenteDao {
 				));
 			}
 		} catch (SQLException e) {
-			System.err.println("Problema na execução da query: " + e.getMessage());
+			System.err.println("Problema na execução da query para listar o dependente: " + e.getMessage());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class DependenteDao {
 			stmt.setInt(5, cod_Funcionario);
 			stmt.execute();
 		} catch (SQLException e) {
-			System.err.println("Problema na execução da query: " + e.getMessage());
+			System.err.println("Problema na execução da query para inserir o dependente: " + e.getMessage());
 		}
 	}
 

@@ -34,7 +34,7 @@ public class FuncionarioDAO {
 				funcionario.setCodigo_funcionario(rs.getInt(1));
 			}
 		} catch (SQLException e) {
-			System.err.println("Problema na execução da query: " + e.getMessage());
+			System.err.println("Problema na execução da query para inserir o funcionário: " + e.getMessage());
 		}
 	}
 
@@ -49,7 +49,7 @@ public class FuncionarioDAO {
 			stmt.setInt(5, funcionario.getCodigo_funcionario());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Problema na atualização: " + e.getMessage());
+			System.err.println("Problema na atualização do funcionário: " + e.getMessage());
 		}
 	}
 

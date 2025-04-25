@@ -23,6 +23,7 @@ public class LeituraArquivo {
 					dadosPorLinha.add(linha.split(";"));
 				}
 			}
+			System.out.println("Arquivo lido com sucesso!");
 			sc1.close();
 		} catch (IOException e) {
 			System.err.println("Arquivo não encontrado!");
