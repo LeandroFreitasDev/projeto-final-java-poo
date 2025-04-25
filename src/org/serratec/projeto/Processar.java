@@ -37,7 +37,14 @@ public class Processar {
 				funcionarioAtual = new Funcionario(nome, cpf, dataNascimento, salarioBruto, new ArrayList<>());
 			} catch (NumberFormatException e) {
 				parentesco = Parentesco.valueOf(dados[3].toUpperCase());
-				boolean cpfExistente = dependentesTemp.stream().anyMatch(dep -> dep.getCpf().equals(cpf));
+
+				boolean cpfExistente = false;
+				for (Dependente dep : dependentesTemp) {
+					if (dep.getCpf().equals(cpf)) {
+						cpfExistente = true;
+						break;
+					}
+				}
 				if (!cpfExistente) {
 					dependentesTemp.add(new Dependente(nome, cpf, dataNascimento, parentesco));
 				}
@@ -57,19 +64,33 @@ public class Processar {
 		Double descontoIr = CalcularFolha.CalcularIR(salario, descontoInss, dependentes.size());
 		funcionario.setDescontoInss(descontoInss);
 		funcionario.setDescontoIR(descontoIr);
-		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf()) || dependentes.stream().anyMatch(d -> cpfsUnicos.contains(d.getCpf()));
-		FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
-		funcionarioDAO.inserir(funcionario);
-		DependenteDao dependenteDao = new DependenteDao();
-		for (Dependente dependente : dependentes) {
-			dependenteDao.inserir(dependente, funcionario.getCodigo_funcionario());
+
+		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
+		for (Dependente d : dependentes) {
+			if (cpfsUnicos.contains(d.getCpf())) {
+				cpfDuplicado = true;
+				break;
+			}
 		}
-		if (cpfDuplicado) {
+
+		if (!cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
 		} else {
+			System.out.println("Passou aqui-------");
 			cpfsUnicos.add(funcionario.getCpf());
-			dependentes.forEach(d -> cpfsUnicos.add(d.getCpf()));
+			for (Dependente d : dependentes) {
+				cpfsUnicos.add(d.getCpf());
+			}
+			System.out.println(funcionario + "MAIS DEBUGG"); 
 			funcionarios.add(funcionario);
+
+			FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+			funcionarioDAO.inserir(funcionario);
+			DependenteDao dependenteDao = new DependenteDao();
+			for (Dependente dependente : dependentes) {
+				dependenteDao.inserir(dependente, funcionario.getCodigo_funcionario());
+			}
+
 		}
 	}
 
@@ -80,5 +101,4 @@ public class Processar {
 	public List<Funcionario> getFuncionariosComCpfDuplicado() {
 		return funcionariosComCpfDuplicado;
 	}
-	
 }
