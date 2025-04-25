@@ -84,7 +84,7 @@ public class Processar {
 			}
 		}
 
-		if (!cpfDuplicado) {
+		if (cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
 		} else {
 			cpfsUnicos.add(funcionario.getCpf());
