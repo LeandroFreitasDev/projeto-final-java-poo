@@ -1,1 +1,4 @@
------ Nome ----- ----- Salário Bruto ----- ----- Desconto INSS ----- ----- Desconto IR----- -----Salário Líquido-----
+--- Nome --- --- Salário Bruto --- --- Desconto INSS --- --- Desconto IR--- --- Salário Líquido ---
+Maria dos Santos;01234567890;313,40;41,12;3145,48
+Raquel;01256567450;951,62;1265,17;6783,21
+Rafael;01255567490;148,23;0,00;1751,77
