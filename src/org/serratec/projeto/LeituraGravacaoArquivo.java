@@ -4,6 +4,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -16,6 +19,8 @@ import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.serratec.projeto.Funcionario;
+import org.serratec.excecoes.DependenteException;
 import org.serratec.persistence.DependenteDao;
 import org.serratec.persistence.FuncionarioDAO;
 
@@ -50,7 +55,7 @@ public class LeituraGravacaoArquivo {
 		return dadosPorLinha;
 	}
 
-	public void processarArquivo(List<String[]> dadosPorLinha) {
+	public void processarArquivo(List<String[]> dadosPorLinha) throws DependenteException, SQLException { // <
 		List<Dependente> dependentesTemp = new ArrayList<>();
 		Funcionario funcionarioAtual = null;
 		boolean isFuncionario;
@@ -81,16 +86,19 @@ public class LeituraGravacaoArquivo {
 				Parentesco parentesco = Parentesco.valueOf(dados[3].toUpperCase());
 				dependentesTemp.add(new Dependente(nome, cpf, dataNascimento, parentesco));
 			}
+			funcionarioAtual.setDependentes(dependentesTemp);
 		}
 
 		if (funcionarioAtual != null) {
 			processarFuncionario(funcionarioAtual, dependentesTemp);
-			System.out.println("Passou funcionario----" + funcionarioAtual.getCod_funcionario());
+			System.out.println("Passou funcionario----" + funcionarioAtual.getCodigo_funcionario()); // alterei para
+																										// codigo_funcionario
 
 		}
 	}
 
-	private void processarFuncionario(Funcionario funcionario, List<Dependente> dependentes) {
+	private void processarFuncionario(Funcionario funcionario, List<Dependente> dependentes)
+			throws DependenteException, SQLException { // <
 		funcionario.setDependentes(new ArrayList<>(dependentes));
 
 		Double salario = funcionario.getSalarioBruto();
@@ -100,6 +108,8 @@ public class LeituraGravacaoArquivo {
 		funcionario.setDescontoInss(descontoInss);
 		funcionario.setDescontoIR(descontoIr);
 		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
+		System.out.println("Aqui ta funcionando " + funcionario.getCodigo_funcionario()); // alterei para
+																							// codigo_funcionario
 
 		for (Dependente d : dependentes) {
 			if (cpfsUnicos.contains(d.getCpf())) {
@@ -112,17 +122,24 @@ public class LeituraGravacaoArquivo {
 		dao2.inserir(funcionario);
 
 		DependenteDao dao1 = new DependenteDao();
-		funcionarios = dao2.listar(); 
+		funcionarios = dao2.listar();
 		for (Funcionario fun : funcionarios) {
-			
-		}
-		for (Dependente dependente : dependentes) {
-			System.out.println("passou aqui-------" + funcionario.getCod_funcionario());
-			dao1.inserir(dependente, funcionario.getCod_funcionario());
+			System.out.println("passou aqui-------" + fun.getCodigo_funcionario()); // alterei para fun, nome
+			for (Dependente dependente : dependentes) {
 
+				// codigo_funcionario
+				dao1.inserir(dependente, fun.getCodigo_funcionario()); // alterei para codigo_funcionario
+				funcionario.setDependentes(new ArrayList<>(dependentes));
+			}
 		}
+//		for (Dependente dependente : dependentes) {
+//
+//			// codigo_funcionario
+//			dao1.inserir(dependente, funcionario.getCodigo_funcionario()); // alterei para codigo_funcionario
+//
+//		}
 
-		funcionario.setDependentes(new ArrayList<>(dependentes));
+		// funcionario.setDependentes(new ArrayList<>(dependentes)); > adicionado na 129
 
 		if (cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
