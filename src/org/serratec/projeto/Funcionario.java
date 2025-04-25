@@ -3,75 +3,51 @@ package org.serratec.projeto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.serratec.excecoes.DependenteException;
 
 public class Funcionario extends Pessoa {
-
-	// FIZ ALGUMAS MODIFICACOES NO CODIGO, COMO COMENTARIOS
-	// 5 - CRIAR CLASSE FILHA, HERDA DO PAI E INSTANCIA DEPENDENTES
-	// alterei as informacoes do cod_funcionario para codigo_funcionario
-	
 	
 	private Integer codigo_funcionario;
-	private Double salarioBruto; 																						
+	private Double salarioBruto;
 	private Double descontoInss;
 	private Double descontoIR;
 
 	private List<Dependente> dependentes = new ArrayList<>();
 
-	// CONSTRUTOR PADRAO
-	public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto, Double descontoInss,
+	public Funcionario(String nome, String cpf, LocalDate dataNascimento, 
+			Double salarioBruto, Double descontoInss,
 			Double descontoIR, List<Dependente> dependentes) {
-
 		super(nome, cpf, dataNascimento);
 		this.salarioBruto = salarioBruto;
-		this.descontoInss = 0.;
-		this.descontoIR = 0.;
+		this.descontoInss = descontoInss;
+		this.descontoIR = descontoIR;
 		this.dependentes = dependentes;
-//		= null;
-//		cod_funcionario++;
 	}
 
-	public Funcionario(String nome, String cpf, LocalDate dataNascimento, Double salarioBruto,
+	public Funcionario(String nome, String cpf, LocalDate dataNascimento, 
+			Double salarioBruto,
 			List<Dependente> dependentes) {
 		super(nome, cpf, dataNascimento);
 		this.salarioBruto = salarioBruto;
 		this.dependentes = dependentes;
-
 	}
 
-	
 	public Funcionario(Integer codigo_funcionario, String nome, String cpf, 
-			LocalDate dataNascimento,  Double salarioBruto) {
+			LocalDate dataNascimento, Double salarioBruto) {
 		super(nome, cpf, dataNascimento);
 		this.codigo_funcionario = codigo_funcionario;
 		this.salarioBruto = salarioBruto;
-		
-	}
-	
-	
-	// Get e Set
-					//alterei para codigo_funcionario
-	public  Integer getCodigo_funcionario() {
-		return codigo_funcionario;
-	}
-	
-	//adicionado toostring
-	@Override
-	public String toString() {
-		return "Funcionario [codigo_funcionario=" + codigo_funcionario + ", salarioBruto=" + salarioBruto
-				+ ", descontoInss=" + descontoInss + ", descontoIR=" + descontoIR + ", dependentes=" + dependentes
-				+ "]";
 	}
 
-	//alterei para codigo_funcionario
-	public  void getCodigo_funcionario(Integer id_funcionario) {
-		this.codigo_funcionario = id_funcionario;
+	public Integer getCodigo_funcionario() {
+		return codigo_funcionario;
+	}
+
+	public void setCodigo_funcionario(Integer codigo_funcionario) {
+		this.codigo_funcionario = codigo_funcionario;
 	}
 
 	public Double getSalarioBruto() {
 		return salarioBruto;
-
 	}
 
 	public void setSalarioBruto(Double salarioBruto) {
@@ -102,31 +78,10 @@ public class Funcionario extends Pessoa {
 		this.dependentes = dependentes;
 	}
 
-										// METODO EXCEPTION CONTROLE DE IDADE
-//	public void adicionarDependente(Dependente dependente) throws DependenteException { 					// dependente invalido sera
-//																											// trato no main
-//		LocalDate hoje = LocalDate.now();
-//
-//										// CRIADO UMA CLASSE PARA PASSAR A MENSAGEM DE ERRO
-//		if (dependente.getDataNascimento().plusYears(18).isBefore(hoje)) {
-//			throw new DependenteException("Dependente " + dependente.getNome() + " é maior de 18 anos.");
-//		}
-//
-//										// METODO PARA VERIFICAR SE O CPF DO DEPENDENTE JÁ EXISTE NA LISTA
-//		for (Dependente d : dependentes) {
-//			if (d.getCpf().equals(dependente.getCpf())) {
-//				throw new DependenteException("Dependente com CPF duplicado: " + dependente.getCpf());
-//			}
-//
-//		}
-//
-//										// METODO PARA ADICIONAR O DEPENDENTE
-//		dependentes.add(dependente);
-//	}
-
+	@Override
+	public String toString() {
+		return "Funcionario [codigo_funcionario=" + codigo_funcionario + ", salarioBruto=" + salarioBruto
+				+ ", descontoInss=" + descontoInss + ", descontoIR=" + descontoIR + ", dependentes=" + dependentes
+				+ "]";
+	}
 }
-
-// BANCO DE DADOS - POSTGREE, 
-// Table funcionario 
-// > columns - codigo_funcionario,nome_funcionario, 
-// cpf_funcionario, data_nascimento, salario_bruto 

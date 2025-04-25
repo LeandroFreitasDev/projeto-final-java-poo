@@ -1,45 +1,41 @@
 package org.serratec.projeto;
 
 public interface TabelaTaxas {
-	 // 7 Tabela INSS
-	
-    Double INSS_LIMITE_7_5 = 1518.00;
-    Double INSS_ALIQUOTA_7_5 = 0.075;
-    
-    Double INSS_LIMITE_9 = 2793.88;
-    Double INSS_ALIQUOTA_9 = 0.09;
-    Double INSS_DEDUCAO_9 = 22.77;
-    
-    Double INSS_LIMITE_12 = 4190.83;
-    Double INSS_ALIQUOTA_12 = 0.12;
-    Double INSS_DEDUCAO_12 = 106.60;
-    
-    Double INSS_LIMITE_14 = 8157.41;
-    Double INSS_ALIQUOTA_14 = 0.14;
-    Double INSS_DEDUCAO_14 = 190.42;
-    
-    Double INSS_CONTRIBUICAO_TETO = 951.62;
-    
-    // Tabela IR
-    Double IR_VALOR_DEPENDENTE = 186.59;
-    
-    Double IR_LIMITE_ISENTO = 2259.00;
-    
-    Double IR_LIMITE_7_5 = 2826.65;
-    Double IR_ALIQUOTA_7_5 = 0.075;
-    Double IR_DEDUCAO_7_5 = 169.44;
-    
-    Double IR_LIMITE_15 = 3751.05;
-    Double IR_ALIQUOTA_15 = 0.15;
-    Double IR_DEDUCAO_15 = 381.44;
-    
-    Double IR_LIMITE_22_5 = 4664.68;
-    Double IR_ALIQUOTA_22_5 = 0.225;
-    Double IR_DEDUCAO_22_5 = 662.77;
-    
-    Double IR_ALIQUOTA_27_5 = 0.275;
-    Double IR_DEDUCAO_27_5 = 896.00;
+
+	Double INSS_LIMITE_7_5 = 1518.00;
+	Double INSS_ALIQUOTA_7_5 = 0.075;
+
+	Double INSS_LIMITE_9 = 2793.88;
+	Double INSS_ALIQUOTA_9 = 0.09;
+	Double INSS_DEDUCAO_9 = 22.77;
+
+	Double INSS_LIMITE_12 = 4190.83;
+	Double INSS_ALIQUOTA_12 = 0.12;
+	Double INSS_DEDUCAO_12 = 106.60;
+
+	Double INSS_LIMITE_14 = 8157.41;
+	Double INSS_ALIQUOTA_14 = 0.14;
+	Double INSS_DEDUCAO_14 = 190.42;
+
+	Double INSS_CONTRIBUICAO_TETO = 951.62;
+
+	Double IR_VALOR_DEPENDENTE = 186.59;
+
+	Double IR_LIMITE_ISENTO = 2259.00;
+
+	Double IR_LIMITE_7_5 = 2826.65;
+	Double IR_ALIQUOTA_7_5 = 0.075;
+	Double IR_DEDUCAO_7_5 = 169.44;
+
+	Double IR_LIMITE_15 = 3751.05;
+	Double IR_ALIQUOTA_15 = 0.15;
+	Double IR_DEDUCAO_15 = 381.44;
+
+	Double IR_LIMITE_22_5 = 4664.68;
+	Double IR_ALIQUOTA_22_5 = 0.225;
+	Double IR_DEDUCAO_22_5 = 662.77;
+
+	Double IR_ALIQUOTA_27_5 = 0.275;
+	Double IR_DEDUCAO_27_5 = 896.00;
 
 }
-
-

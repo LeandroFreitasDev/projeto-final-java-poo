@@ -4,27 +4,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
-import org.serratec.projeto.Funcionario;
 import org.serratec.excecoes.DependenteException;
 import org.serratec.persistence.DependenteDao;
 import org.serratec.persistence.FuncionarioDAO;
 
 public class LeituraGravacaoArquivo {
+
 	private List<Funcionario> funcionarios = new ArrayList<>();
 	private List<Funcionario> funcionariosComCpfDuplicado = new ArrayList<>();
 	private Set<String> cpfsUnicos = new HashSet<>();
@@ -55,50 +47,54 @@ public class LeituraGravacaoArquivo {
 		return dadosPorLinha;
 	}
 
-	public void processarArquivo(List<String[]> dadosPorLinha) throws DependenteException, SQLException { // <
+	public void processarArquivo(List<String[]> dadosPorLinha) throws DependenteException, SQLException {
 		List<Dependente> dependentesTemp = new ArrayList<>();
 		Funcionario funcionarioAtual = null;
-		boolean isFuncionario;
 
 		for (String[] dados : dadosPorLinha) {
-			try {
-				Double.parseDouble(dados[3]);
-				isFuncionario = true;
-			} catch (NumberFormatException e) {
-				isFuncionario = false;
-			}
+			String nome = dados[0];
+			String cpf = dados[1];
+			LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
+			boolean isFuncionario;
+			Parentesco parentesco = null;
 
-			if (isFuncionario) {
+			try {
+				Double salarioBruto = Double.parseDouble(dados[3]);
+				isFuncionario = true;
+
 				if (funcionarioAtual != null) {
 					processarFuncionario(funcionarioAtual, dependentesTemp);
 					dependentesTemp.clear();
 				}
 
-				String nome = dados[0];
-				String cpf = dados[1];
-				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
-				Double salarioBruto = Double.parseDouble(dados[3]);
 				funcionarioAtual = new Funcionario(nome, cpf, dataNascimento, salarioBruto, new ArrayList<>());
-			} else {
-				String nome = dados[0];
-				String cpf = dados[1];
-				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
-				Parentesco parentesco = Parentesco.valueOf(dados[3].toUpperCase());
-				dependentesTemp.add(new Dependente(nome, cpf, dataNascimento, parentesco));
+
+			} catch (NumberFormatException e) {
+				isFuncionario = false;
+				parentesco = Parentesco.valueOf(dados[3].toUpperCase());
+
+				boolean cpfExistente = false;
+				for (Dependente dependente : dependentesTemp) {
+					if (dependente.getCpf().equals(cpf)) {
+						cpfExistente = true;
+						break;
+					}
+				}
+
+				if (!cpfExistente) {
+					dependentesTemp.add(new Dependente(nome, cpf, dataNascimento, parentesco));
+				}
 			}
-			funcionarioAtual.setDependentes(dependentesTemp);
 		}
 
 		if (funcionarioAtual != null) {
 			processarFuncionario(funcionarioAtual, dependentesTemp);
-			System.out.println("Passou funcionario----" + funcionarioAtual.getCodigo_funcionario()); // alterei para
-																										// codigo_funcionario
-
 		}
 	}
 
 	private void processarFuncionario(Funcionario funcionario, List<Dependente> dependentes)
-			throws DependenteException, SQLException { // <
+			throws DependenteException, SQLException {
+
 		funcionario.setDependentes(new ArrayList<>(dependentes));
 
 		Double salario = funcionario.getSalarioBruto();
@@ -107,10 +103,8 @@ public class LeituraGravacaoArquivo {
 
 		funcionario.setDescontoInss(descontoInss);
 		funcionario.setDescontoIR(descontoIr);
-		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
-		System.out.println("Aqui ta funcionando " + funcionario.getCodigo_funcionario()); // alterei para
-																							// codigo_funcionario
 
+		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
 		for (Dependente d : dependentes) {
 			if (cpfsUnicos.contains(d.getCpf())) {
 				cpfDuplicado = true;
@@ -118,28 +112,14 @@ public class LeituraGravacaoArquivo {
 			}
 		}
 
-		FuncionarioDAO dao2 = new FuncionarioDAO();
-		dao2.inserir(funcionario);
+		FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
+		funcionarioDAO.inserir(funcionario);
 
-		DependenteDao dao1 = new DependenteDao();
-		funcionarios = dao2.listar();
-		for (Funcionario fun : funcionarios) {
-			System.out.println("passou aqui-------" + fun.getCodigo_funcionario()); // alterei para fun, nome
-			for (Dependente dependente : dependentes) {
-
-				// codigo_funcionario
-				dao1.inserir(dependente, fun.getCodigo_funcionario()); // alterei para codigo_funcionario
-				funcionario.setDependentes(new ArrayList<>(dependentes));
-			}
+		DependenteDao dependenteDao = new DependenteDao();
+		for (Dependente dependente : dependentes) {
+			dependenteDao.inserir(dependente, funcionario.getCodigo_funcionario());
 		}
-//		for (Dependente dependente : dependentes) {
-//
-//			// codigo_funcionario
-//			dao1.inserir(dependente, funcionario.getCodigo_funcionario()); // alterei para codigo_funcionario
-//
-//		}
-
-		// funcionario.setDependentes(new ArrayList<>(dependentes)); > adicionado na 129
+		funcionario.setDependentes(new ArrayList<>(dependentes));
 
 		if (cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
@@ -153,46 +133,47 @@ public class LeituraGravacaoArquivo {
 	}
 
 	public void gerarCPFDuplicados() {
-		if (!funcionariosComCpfDuplicado.isEmpty()) {
-			try {
-				FileWriter fw = new FileWriter("/CPFDuplicados.csv");
-				PrintWriter pw = new PrintWriter(fw);
-				for (Funcionario f : funcionariosComCpfDuplicado) {
-					String linha = "FUNCIONÁRIO: " + f.getNome() + ";" + f.getCpf() + ";" + f.getDataNascimento() + ";"
-							+ f.getSalarioBruto();
-					pw.println(linha);
-					for (Dependente d : f.getDependentes()) {
-						String linhaDep = "DEPENDENTE: " + d.getNome() + ";" + d.getCpf() + ";" + d.getDataNascimento()
-								+ ";" + d.getParentesco();
-						pw.println(linhaDep);
-					}
-					pw.close();
+		if (funcionariosComCpfDuplicado.isEmpty()) {
+			System.out.println("Nenhum CPF duplicado encontrado.");
+			return;
+		}
+
+		String caminhoArquivo = "./cpfs_duplicados.csv";
+
+		try (FileWriter fw = new FileWriter(caminhoArquivo); PrintWriter pw = new PrintWriter(fw)) {
+			for (Funcionario f : funcionariosComCpfDuplicado) {
+				pw.println("FUNCIONÁRIO: " + f.getNome() + ";" + f.getCpf() + ";" + f.getDataNascimento() + ";"
+						+ f.getSalarioBruto());
+
+				for (Dependente d : f.getDependentes()) {
+					pw.println("DEPENDENTE: " + d.getNome() + ";" + d.getCpf() + ";" + d.getDataNascimento() + ";"
+							+ d.getParentesco());
 				}
-			} catch (IOException e) {
-				System.out.println("Erro ao criar o arquivo de CPFs duplicados.");
+				pw.println();
 			}
+
+			System.out.println("Arquivo de CPFs duplicados gerado em: " + caminhoArquivo);
+		} catch (IOException e) {
+			System.out.println("Erro ao criar o arquivo de CPFs duplicados: " + e.getMessage());
 		}
 	}
 
 	public void gerarFolha() {
-		try {
-			FileWriter fw = new FileWriter("./folhaPagamento.csv");
-			PrintWriter pw = new PrintWriter(fw);
+		String caminhoArquivo = "./folha_pagamento.csv";
 
+		try (FileWriter fw = new FileWriter(caminhoArquivo); PrintWriter pw = new PrintWriter(fw)) {
 			for (Funcionario f : funcionarios) {
 				FolhaPagamento folha = new FolhaPagamento(f);
 
-				String linha = f.getNome() + ";" + f.getCpf() + ";" + formatarReais.format(folha.getDescontoINSS())
-						+ ";" + formatarReais.format(folha.getDescontoIR()) + ";"
-						+ formatarReais.format(folha.getSalarioLiquido());
+				String linha = String.join(";", f.getNome(), f.getCpf(), formatarReais.format(folha.getDescontoINSS()),
+						formatarReais.format(folha.getDescontoIR()), formatarReais.format(folha.getSalarioLiquido()));
 
 				pw.println(linha);
 			}
 
-			pw.close();
+			System.out.println("Folha de pagamento gerada em: " + caminhoArquivo);
 		} catch (IOException e) {
-			System.out.println("Erro ao criar o arquivo de folha de pagamento.");
+			System.out.println("Erro ao criar o arquivo de folha de pagamento: " + e.getMessage());
 		}
 	}
-
 }

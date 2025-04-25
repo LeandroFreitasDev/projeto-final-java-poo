@@ -1,24 +1,18 @@
 package org.serratec.persistence;
 
-// PACKAGE PROJETO FINAL SERRATEC
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Date;
+
 import org.serratec.conexao.ConnectionFactory;
 import org.serratec.excecoes.DependenteException;
 import org.serratec.projeto.Dependente;
-import org.serratec.projeto.Funcionario;
 import org.serratec.projeto.Parentesco;
 
 public class DependenteDao {
 	private Connection connection;
-	List<Dependente> dependentes = new ArrayList<>();
+	private List<Dependente> dependentes = new ArrayList<>();
 
 	public DependenteDao() {
 		connection = new ConnectionFactory().getConnection();
@@ -26,27 +20,28 @@ public class DependenteDao {
 	}
 
 	public void listar() {
-		String sql = "select * from dependente";
+		String sql = "SELECT * FROM dependente";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-
-				dependentes.add(new Dependente(rs.getString("nome_dependente"), rs.getString("cpf_dependente"),
-						rs.getDate("data_nascimento").toLocalDate(), Parentesco.valueOf(rs.getString("parentesco")),
-						rs.getInt("codigo_dependente")));
-
+				dependentes.add(new Dependente(
+					rs.getString("nome_dependente"),
+					rs.getString("cpf_dependente"),
+					rs.getDate("data_nascimento").toLocalDate(),
+					Parentesco.valueOf(rs.getString("parentesco")),
+					rs.getInt("codigo_dependente")
+				));
 			}
-
 		} catch (SQLException e) {
-			System.err.println("Problema na execução da query");
+			System.err.println("Problema na execução da query: " + e.getMessage());
 		}
 	}
 
-	public void inserir(Dependente dependente, int cod_Funcionario) throws DependenteException { // adicionado
-		for (Dependente dependente2 : dependentes) {
-			if (dependente2.getCpf().equals(dependente.getCpf())) {
-				throw new DependenteException("Dependente " + dependente.getNome() + " CPF ja cadastrado.");
+	public void inserir(Dependente dependente, int cod_Funcionario) throws DependenteException {
+		for (Dependente dep : dependentes) {
+			if (dep.getCpf().equals(dependente.getCpf())) {
+				throw new DependenteException("Dependente " + dependente.getNome() + " CPF já cadastrado.");
 			}
 		}
 
@@ -55,8 +50,7 @@ public class DependenteDao {
 			throw new DependenteException("Dependente " + dependente.getNome() + " é maior de 18 anos.");
 		}
 
-		String sql = "insert into dependente" + "(nome_dependente, cpf_dependente, data_nascimento, "
-				+ "parentesco, cod_funcionario ) " + "values (?,?,?,?,?)";
+		String sql = "INSERT INTO dependente(nome_dependente, cpf_dependente, data_nascimento, parentesco, cod_funcionario) VALUES (?,?,?,?,?)";
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -65,48 +59,24 @@ public class DependenteDao {
 			stmt.setDate(3, Date.valueOf(dependente.getDataNascimento()));
 			stmt.setString(4, dependente.getParentesco().toString());
 			stmt.setInt(5, cod_Funcionario);
-			System.out.println("Passou aqui ----" + dependente.toString());
-			stmt.execute();
-		} catch (SQLException e) {
-			System.err.println("Problema na execução da query");
-			e.printStackTrace();
-		}
-	}
-
-//	public boolean existeCpf(String cpf) {
-//		String sql = "SELECT 1 FROM dependente WHERE cpf_dependente = ?";
-//		try (Connection connection = new ConnectionFactory().getConnection();
-//				PreparedStatement ps = connection.prepareStatement(sql)) {
-//
-//			ps.setString(1, cpf);
-//			ResultSet rs = ps.executeQuery();
-//			return rs.next(); 							// Se tiver resultado, já existe
-//
-//		} catch (SQLException e) {
-//
-//		}
-//	}
-
-	public void atualizar(Dependente dependente) {
-		String sql = "UPDATE dependente SET (setnome=?, setcpf=?, setdata_nascimento) where =?";
-		try {
-			PreparedStatement stmt = connection.prepareStatement(sql);
-			stmt.setString(1, dependente.getNome());
-			stmt.setString(2, dependente.getCpf());
-			stmt.setDate(3, Date.valueOf(dependente.getDataNascimento()));
 			stmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Problema na execução da query: " + e.getMessage());
 		}
 	}
 
-	// public static void main(String[] args) {
-	// Dependente D1 = new Dependente("Marcelo", "1505900000", LocalDate.of(1990, 1,
-	// 20), null);
-	// DependenteDao dao = new DependenteDao();
-
-	// dao.inserir(D1, getF);
+	public void atualizar(Dependente dependente) {
+		String sql = "UPDATE dependente SET nome_dependente = ?, cpf_dependente = ?, data_nascimento = ?, parentesco = ? WHERE codigo_dependente = ?";
+		try {
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, dependente.getNome());
+			stmt.setString(2, dependente.getCpf());
+			stmt.setDate(3, Date.valueOf(dependente.getDataNascimento()));
+			stmt.setString(4, dependente.getParentesco().toString());
+			stmt.setInt(5, dependente.getCodigo_dependente());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Erro ao atualizar dependente: " + e.getMessage());
+		}
+	}
 }
-//}
-
-// é melhor abraçar um ouriço que mexer com isso - 22/04/25 Ass: Leandro!
