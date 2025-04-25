@@ -27,7 +27,7 @@ public class FolhadePagamentoDao {
 			stmt.setInt(5, folhaPagamento.getFuncionario().getCodigo_funcionario());
 			stmt.execute();
 		} catch (SQLException e) {
-			System.err.println("Problema na execução com o banco de dados: " + e.getMessage());
+			System.err.println("Problema na execução da query para inserir a folha de pagamento: " + e.getMessage());
 		}
 	}
 
@@ -43,7 +43,7 @@ public class FolhadePagamentoDao {
 			stmt.setInt(6, folhaPagamento.getCodigo());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Erro ao atualizar folha: " + e.getMessage());
+			System.err.println("Erro ao atualizar folha de pagamento: " + e.getMessage());
 		}
 	}
 }

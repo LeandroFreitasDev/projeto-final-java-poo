@@ -47,18 +47,18 @@ public class Gerar {
 		try {
 			FileWriter fw = new FileWriter(caminhoArquivo);
 			PrintWriter pw = new PrintWriter(fw);
-			String cabecalho = "----- Nome ----- ----- Salário Bruto ----- ----- "
-					+ "Desconto INSS ----- ----- "
-					+ "Desconto IR----- -----Salário Líquido-----";
+			String cabecalho = "- Nome - "
+					+ "Salário Bruto - "
+					+ "Desconto INSS - "
+					+ "Desconto IR -"
+					+ "Salário Líquido -";
 			pw.println(cabecalho);
 			
 			for (Funcionario f : funcionarios) {
 				FolhaPagamento folha = new FolhaPagamento(f);
 				
-				
 				dao.inserir(folha);
-				
-				
+				System.out.println("Folha gerada com sucesso para " + f.getNome());
 				String linha = f.getNome() + ";" + f.getCpf() + ";" + formatarReais.format(folha.getDescontoINSS())
 						+ ";" + formatarReais.format(folha.getDescontoIR()) + ";"
 						+ formatarReais.format(folha.getSalarioLiquido());

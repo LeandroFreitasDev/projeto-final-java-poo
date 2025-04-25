@@ -3,10 +3,7 @@ package org.serratec.projeto;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.serratec.excecoes.DependenteException;
 import org.serratec.persistence.DependenteDao;
@@ -23,20 +20,32 @@ public class Processar {
 		Funcionario funcionarioAtual = null;
 
 		for (String[] dados : dadosPorLinha) {
-			String nome = dados[0];
-			String cpf = dados[1];
-			LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
-			Parentesco parentesco = null;
+			boolean isFuncionario;
 
 			try {
-				Double salarioBruto = Double.parseDouble(dados[3]);
+				Double.parseDouble(dados[3]);
+				isFuncionario = true;
+			} catch (NumberFormatException e) {
+				isFuncionario = false;
+			}
+
+			if (isFuncionario) {
 				if (funcionarioAtual != null) {
 					processarFuncionario(funcionarioAtual, dependentesTemp);
 					dependentesTemp.clear();
 				}
+
+				String nome = dados[0];
+				String cpf = dados[1];
+				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
+				Double salarioBruto = Double.parseDouble(dados[3]);
+
 				funcionarioAtual = new Funcionario(nome, cpf, dataNascimento, salarioBruto, new ArrayList<>());
-			} catch (NumberFormatException e) {
-				parentesco = Parentesco.valueOf(dados[3].toUpperCase());
+			} else {
+				String nome = dados[0];
+				String cpf = dados[1];
+				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
+				Parentesco parentesco = Parentesco.valueOf(dados[3].toUpperCase());
 
 				boolean cpfExistente = false;
 				for (Dependente dep : dependentesTemp) {
@@ -58,7 +67,9 @@ public class Processar {
 
 	private void processarFuncionario(Funcionario funcionario, List<Dependente> dependentes)
 			throws DependenteException, SQLException {
+
 		funcionario.setDependentes(new ArrayList<>(dependentes));
+
 		Double salario = funcionario.getSalarioBruto();
 		Double descontoInss = CalcularFolha.CalcularINSS(salario);
 		Double descontoIr = CalcularFolha.CalcularIR(salario, descontoInss, dependentes.size());
@@ -76,21 +87,19 @@ public class Processar {
 		if (!cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
 		} else {
-			System.out.println("Passou aqui-------");
 			cpfsUnicos.add(funcionario.getCpf());
 			for (Dependente d : dependentes) {
 				cpfsUnicos.add(d.getCpf());
 			}
-			System.out.println(funcionario + "MAIS DEBUGG"); 
 			funcionarios.add(funcionario);
 
 			FuncionarioDAO funcionarioDAO = new FuncionarioDAO();
 			funcionarioDAO.inserir(funcionario);
+
 			DependenteDao dependenteDao = new DependenteDao();
 			for (Dependente dependente : dependentes) {
 				dependenteDao.inserir(dependente, funcionario.getCodigo_funcionario());
 			}
-
 		}
 	}
 
