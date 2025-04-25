@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-
 import org.serratec.conexao.ConnectionFactory;
 import org.serratec.projeto.Dependente;
 import org.serratec.projeto.FolhaPagamento;

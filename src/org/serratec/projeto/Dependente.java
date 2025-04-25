@@ -24,6 +24,15 @@ public class Dependente extends Pessoa{
 			this.parentesco = parentesco;
 		}
 
+		@Override
+		public String toString() {
+			return "Dependente [parentesco=" + parentesco + ", nome=" + nome + ", cpf=" + cpf + ", dataNascimento="
+					+ dataNascimento + ", getParentesco()=" + getParentesco() + ", getNome()=" + getNome()
+					+ ", getCpf()=" + getCpf() + ", getDataNascimento()=" + getDataNascimento() + ", getClass()="
+					+ getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+		}
+
+		
 	}
 
 // BANCO DE DADOS - POSTGREE, Table Dependente 
