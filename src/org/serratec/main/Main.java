@@ -8,7 +8,7 @@ import org.serratec.projeto.LeituraGravacaoArquivo;
 
 public class Main {
 
-	public static void main(String[] args) throws DependenteException, SQLException { //<
+	public static void main(String[] args) throws DependenteException, SQLException { 
 		LeituraGravacaoArquivo a = new LeituraGravacaoArquivo();
 		List<String[]> dadosPorLinha = a.lerArquivo();
 		if (!dadosPorLinha.isEmpty()) {
