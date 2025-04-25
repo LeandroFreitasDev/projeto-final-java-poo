@@ -19,7 +19,7 @@ public interface TabelaTaxas {
 
 	Double INSS_CONTRIBUICAO_TETO = 951.62;
 
-	Double IR_VALOR_DEPENDENTE = 186.59;
+	Double IR_VALOR_DEPENDENTE = 189.59;
 
 	Double IR_LIMITE_ISENTO = 2259.00;
 
