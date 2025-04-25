@@ -23,9 +23,9 @@ public class FuncionarioDAO {
 	}
 
 	public void inserir(Funcionario funcionario) {
-		if (existeCpf(funcionario.getCpf())) {
-			System.out.println("Cpf ja cadastrado" + funcionario.getCpf());
-		}
+//		if (existeCpf(funcionario.getCpf())) {
+//			System.out.println("Cpf ja cadastrado" + funcionario.getCpf());
+//		}
 
 		String sql = "insert into funcionario" + "(nome_funcionario, " + "cpf_funcionario, data_nascimento, "
 				+ "salario_bruto) values(?,?,?,?)";
@@ -39,7 +39,7 @@ public class FuncionarioDAO {
 			stmt.execute();
 		} catch (SQLException e) {
 			System.err.println("Problema na execução da query");
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -62,18 +62,20 @@ public class FuncionarioDAO {
 		return funcionarios;
 	}
 
-	public boolean existeCpf(String cpf) {
-		String sql = "SELECT 1 FROM funcionario WHERE cpf_funcionario = ?";
-		try (Connection connection = new ConnectionFactory().getConnection();
-				PreparedStatement ps = connection.prepareStatement(sql)) {
-			ps.setString(1, cpf);
-			ResultSet rs = ps.executeQuery();
-			return rs.next(); // Se tiver resultado, já existe
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+//	public boolean existeCpf(String cpf) {
+//		String sql = "SELECT 1 FROM funcionario WHERE cpf_funcionario = ?";
+//		try (Connection connection = new ConnectionFactory().getConnection();
+//				PreparedStatement ps = connection.prepareStatement(sql)) {
+//			ps.setString(1, cpf);
+//			ResultSet rs = ps.executeQuery();
+//			return rs.next(); 														// Se tiver resultado, já existe
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
+	
+	
 
 	public void atualizar(Funcionario funcionario) {
 		String sql = "UPDATE funcionario SET nome = ?, cpf = ?, data_nascimento = ? WHERE id = ?";

@@ -6,12 +6,20 @@ public class Dependente extends Pessoa{
 	// 3- Criar Classe Filha Herdar do Pai
 	
 		private Parentesco parentesco;
+		private Integer codigo_dependente;
 		
 		
 		// Construtor
 		public Dependente(String nome, String cpf, LocalDate dataNascimento, Parentesco parentesco) { 
 			super(nome, cpf, dataNascimento);
 			this.parentesco = parentesco;
+		}
+		
+		public Dependente(String nome, String cpf, LocalDate dataNascimento, Parentesco parentesco,
+				Integer codigo_dependente) {
+			super(nome, cpf, dataNascimento);
+			this.parentesco = parentesco;
+			this.codigo_dependente = codigo_dependente;
 		}
 
 		// Get e Set
