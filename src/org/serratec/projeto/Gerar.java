@@ -1,5 +1,7 @@
 package org.serratec.projeto;
 
+import org.serratec.persistence.FolhadePagamentoDao;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,15 +22,18 @@ public class Gerar {
 		}
 		String caminhoArquivo = "./cpfs_duplicados.csv";
 		try {
-			FileWriter fw = new FileWriter(caminhoArquivo); 
+			FileWriter fw = new FileWriter(caminhoArquivo);
 			PrintWriter pw = new PrintWriter(fw);
 			for (Funcionario f : funcionariosComCpfDuplicado) {
-				pw.println("FUNCIONÁRIO: " + f.getNome() + ";" + f.getCpf() + ";" + f.getDataNascimento() + ";" + f.getSalarioBruto());
+				pw.println("FUNCIONÁRIO: " + f.getNome() + ";" + f.getCpf() + ";" + f.getDataNascimento() + ";"
+						+ f.getSalarioBruto());
 				for (Dependente d : f.getDependentes()) {
-					pw.println("DEPENDENTE: " + d.getNome() + ";" + d.getCpf() + ";" + d.getDataNascimento() + ";" + d.getParentesco());
+					pw.println("DEPENDENTE: " + d.getNome() + ";" + d.getCpf() + ";" + d.getDataNascimento() + ";"
+							+ d.getParentesco());
 				}
 				pw.println();
 			}
+			pw.close();
 			System.out.println("Arquivo de CPFs duplicados gerado em: " + caminhoArquivo);
 		} catch (IOException e) {
 			System.out.println("Erro ao criar o arquivo de CPFs duplicados: " + e.getMessage());
@@ -37,19 +42,31 @@ public class Gerar {
 
 	public void gerarFolha(List<Funcionario> funcionarios) {
 		String caminhoArquivo = "./folha_pagamento.csv";
+		FolhadePagamentoDao dao = new FolhadePagamentoDao(); 
+
 		try {
-			FileWriter fw = new FileWriter(caminhoArquivo); 
+			FileWriter fw = new FileWriter(caminhoArquivo);
 			PrintWriter pw = new PrintWriter(fw);
+			String cabecalho = "----- Nome ----- ----- Salário Bruto ----- ----- "
+					+ "Desconto INSS ----- ----- "
+					+ "Desconto IR----- -----Salário Líquido-----";
+			pw.println(cabecalho);
+			
 			for (Funcionario f : funcionarios) {
 				FolhaPagamento folha = new FolhaPagamento(f);
-				String linha = f.getNome() + ";" +
-					f.getCpf()  + ";" +
-					formatarReais.format(folha.getDescontoINSS())  + ";" +
-					formatarReais.format(folha.getDescontoIR())  + ";" +
-					formatarReais.format(folha.getSalarioLiquido());
+				
+				
+				dao.inserir(folha);
+				
+				
+				String linha = f.getNome() + ";" + f.getCpf() + ";" + formatarReais.format(folha.getDescontoINSS())
+						+ ";" + formatarReais.format(folha.getDescontoIR()) + ";"
+						+ formatarReais.format(folha.getSalarioLiquido());
+				
 				pw.println(linha);
 			}
-			System.out.println("Folha de pagamento gerada em: " + caminhoArquivo);
+			pw.close();
+			System.out.println("Folha de pagamento gerada e salva no banco de dados em: " + caminhoArquivo);
 		} catch (IOException e) {
 			System.out.println("Erro ao criar o arquivo de folha de pagamento: " + e.getMessage());
 		}
