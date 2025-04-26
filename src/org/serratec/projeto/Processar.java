@@ -47,13 +47,9 @@ public class Processar {
 				LocalDate dataNascimento = LocalDate.parse(dados[2], formatar);
 				Parentesco parentesco = Parentesco.valueOf(dados[3].toUpperCase());
 
-				boolean cpfExistente = false;
-				for (Dependente dep : dependentesTemp) {
-					if (dep.getCpf().equals(cpf)) {
-						cpfExistente = true;
-						break;
-					}
-				}
+				boolean cpfExistente = dependentesTemp.stream()
+					.anyMatch(dep -> dep.getCpf().equals(cpf));
+
 				if (!cpfExistente) {
 					dependentesTemp.add(new Dependente(nome, cpf, dataNascimento, parentesco));
 				}
@@ -76,7 +72,12 @@ public class Processar {
 		funcionario.setDescontoInss(descontoInss);
 		funcionario.setDescontoIR(descontoIr);
 
-		boolean cpfDuplicado = cpfsUnicos.contains(funcionario.getCpf());
+		boolean cpfDuplicado = false;
+
+		if (cpfsUnicos.contains(funcionario.getCpf())) {
+			cpfDuplicado = true;
+		}
+
 		for (Dependente d : dependentes) {
 			if (cpfsUnicos.contains(d.getCpf())) {
 				cpfDuplicado = true;
