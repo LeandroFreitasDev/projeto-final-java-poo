@@ -58,6 +58,7 @@ public class Gerar {
 				FolhaPagamento folha = new FolhaPagamento(f);
 				
 				dao.inserir(folha);
+
 				System.out.println("Folha gerada com sucesso para " + f.getNome());
 				String linha = f.getNome() + ";" + f.getCpf() + ";" + formatarReais.format(folha.getDescontoINSS())
 						+ ";" + formatarReais.format(folha.getDescontoIR()) + ";"

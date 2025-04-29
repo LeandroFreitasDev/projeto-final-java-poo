@@ -25,13 +25,11 @@ public class DependenteDao {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				dependentes.add(new Dependente(
-					rs.getString("nome_dependente"),
-					rs.getString("cpf_dependente"),
-					rs.getDate("data_nascimento").toLocalDate(),
-					Parentesco.valueOf(rs.getString("parentesco")),
-					rs.getInt("codigo_dependente")
-				));
+				dependentes.add(new Dependente(rs.getString("nome_dependente"), 
+						rs.getString("cpf_dependente"),
+						rs.getDate("data_nascimento").toLocalDate(), 
+						Parentesco.valueOf(rs.getString("parentesco")),
+						rs.getInt("codigo_dependente")));
 			}
 		} catch (SQLException e) {
 			System.err.println("Problema na execução da query para listar o dependente: " + e.getMessage());
@@ -50,7 +48,10 @@ public class DependenteDao {
 			throw new DependenteException("Dependente " + dependente.getNome() + " é maior de 18 anos.");
 		}
 
-		String sql = "INSERT INTO dependente(nome_dependente, cpf_dependente, data_nascimento, parentesco, cod_funcionario) VALUES (?,?,?,?,?)";
+		String sql = "INSERT INTO dependente(nome_dependente, "
+				+ "cpf_dependente, data_nascimento, "
+				+ "parentesco, cod_funcionario) "
+				+ "VALUES (?,?,?,?,?)";
 
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
@@ -66,7 +67,10 @@ public class DependenteDao {
 	}
 
 	public void atualizar(Dependente dependente) {
-		String sql = "UPDATE dependente SET nome_dependente = ?, cpf_dependente = ?, data_nascimento = ?, parentesco = ? WHERE codigo_dependente = ?";
+		String sql = "UPDATE dependente SET nome_dependente = ?, "
+				+ "cpf_dependente = ?, data_nascimento = ?, "
+				+ "parentesco = ? "
+				+ "WHERE codigo_dependente = ?";
 		try {
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, dependente.getNome());

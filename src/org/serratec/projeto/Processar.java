@@ -65,7 +65,7 @@ public class Processar {
 			throws DependenteException, SQLException {
 
 		funcionario.setDependentes(new ArrayList<>(dependentes));
-
+    
 		Double salario = funcionario.getSalarioBruto();
 		Double descontoInss = CalcularFolha.CalcularINSS(salario);
 		Double descontoIr = CalcularFolha.CalcularIR(salario, descontoInss, dependentes.size());
@@ -88,6 +88,8 @@ public class Processar {
 		if (!cpfDuplicado) {
 			funcionariosComCpfDuplicado.add(funcionario);
 		} else {
+			System.out.println(funcionario);
+
 			cpfsUnicos.add(funcionario.getCpf());
 			for (Dependente d : dependentes) {
 				cpfsUnicos.add(d.getCpf());
