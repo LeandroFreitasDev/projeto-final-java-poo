@@ -58,7 +58,7 @@ public class Gerar {
 				
 				dao.inserir(folha);
 				
-				
+				System.out.println("Folha gerada com sucesso para " + f.getNome());
 				String linha = f.getNome() + ";" + f.getCpf() + ";" + formatarReais.format(folha.getDescontoINSS())
 						+ ";" + formatarReais.format(folha.getDescontoIR()) + ";"
 						+ formatarReais.format(folha.getSalarioLiquido());
